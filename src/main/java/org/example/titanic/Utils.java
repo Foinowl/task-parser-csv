@@ -27,4 +27,15 @@ public class Utils {
         return Utils.class.getClassLoader().getResourceAsStream(fileName);
     }
 
+    public static Double parseStringToDouble(String value) {
+        return value == null || value.isEmpty() ? Double.NaN : Double.parseDouble(value);
+    }
+
+    public static double returnPrimitiveFromDouble(Double d) {
+        if (d.isNaN() ){
+            return 0;
+        }
+        return d;
+    }
+
 }

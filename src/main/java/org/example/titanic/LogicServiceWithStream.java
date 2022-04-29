@@ -9,20 +9,18 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import static org.example.titanic.Utils.parseStringToDouble;
+import static org.example.titanic.Utils.returnPrimitiveFromDouble;
 
 public class LogicServiceWithStream implements CalculateService {
-    private static double parseStringToDouble(String value) {
-        return value == null || value.isEmpty() ? Double.NaN : Double.parseDouble(value);
-    }
-
     @Override
     public double getAverageAgeFromWomen(final List<Titanic> titanicList) {
 
         double value = titanicList
             .stream()
             .filter(Titanic::hasWoman)
-            .mapToDouble(t -> LogicServiceWithStream.parseStringToDouble(t.getAge()))
-            .filter(t -> !Double.isNaN(t))
+            .filter(Titanic::hasSurvied)
+            .mapToDouble(t -> returnPrimitiveFromDouble(parseStringToDouble(t.getAge())))
             .average()
             .orElse(Double.NaN);
 
@@ -36,8 +34,7 @@ public class LogicServiceWithStream implements CalculateService {
             .stream()
             .filter(Titanic::hasMan)
             .filter(t -> !t.hasSurvied())
-            .mapToDouble(t -> LogicServiceWithStream.parseStringToDouble(t.getAge()))
-            .filter(t -> !Double.isNaN(t))
+            .mapToDouble(t -> returnPrimitiveFromDouble(parseStringToDouble(t.getAge())))
             .average()
             .orElse(Double.NaN);
 
