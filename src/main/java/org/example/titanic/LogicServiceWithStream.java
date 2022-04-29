@@ -1,9 +1,5 @@
 package org.example.titanic;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,9 +9,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import com.opencsv.bean.CsvToBeanBuilder;
 
-public class LogicService implements CalculateService {
+public class LogicServiceWithStream implements CalculateService {
     private static double parseStringToDouble(String value) {
         return value == null || value.isEmpty() ? Double.NaN : Double.parseDouble(value);
     }
@@ -26,12 +21,12 @@ public class LogicService implements CalculateService {
         double value = titanicList
             .stream()
             .filter(Titanic::hasWoman)
-            .mapToDouble(t -> LogicService.parseStringToDouble(t.getAge()))
+            .mapToDouble(t -> LogicServiceWithStream.parseStringToDouble(t.getAge()))
             .filter(t -> !Double.isNaN(t))
             .average()
             .orElse(Double.NaN);
 
-        return new BigDecimal(value).setScale(2, RoundingMode.DOWN).doubleValue();
+        return Utils.roundNumber(value);
     }
 
     @Override
@@ -41,12 +36,12 @@ public class LogicService implements CalculateService {
             .stream()
             .filter(Titanic::hasMan)
             .filter(t -> !t.hasSurvied())
-            .mapToDouble(t -> LogicService.parseStringToDouble(t.getAge()))
+            .mapToDouble(t -> LogicServiceWithStream.parseStringToDouble(t.getAge()))
             .filter(t -> !Double.isNaN(t))
             .average()
             .orElse(Double.NaN);
 
-        return roundNumber(value);
+        return Utils.roundNumber(value);
     }
 
     @Override
@@ -61,22 +56,6 @@ public class LogicService implements CalculateService {
             String::length, HashMap::new, ArrayList::new);
 
         return objs;
-    }
-
-    @Override
-    public List<Titanic> getListTitanic() {
-        return new CsvToBeanBuilder(new InputStreamReader(getClassPathResourceInputStream("Евгений Едвабинский - train.csv")))
-            .withType(Titanic.class)
-            .build()
-            .parse();
-    }
-
-    private double roundNumber(double d) {
-        return new BigDecimal(d).setScale(2, RoundingMode.DOWN).doubleValue();
-    }
-
-    private InputStream getClassPathResourceInputStream(String fileName) {
-        return getClass().getClassLoader().getResourceAsStream(fileName);
     }
 
     private <K, V, C extends Collection<V>, M extends Map<K, C>> M getMap(List<V> list,

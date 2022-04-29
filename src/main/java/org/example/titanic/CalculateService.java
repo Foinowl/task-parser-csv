@@ -13,7 +13,4 @@ public interface CalculateService {
 
     //    Получить HashMap, где ключ - количество символов в имени, а значение - количество таких имен
     Map<Integer, Integer> getMapByNamesLength(List<Titanic> titanicList);
-
-
-    List<Titanic> getListTitanic();
 }
