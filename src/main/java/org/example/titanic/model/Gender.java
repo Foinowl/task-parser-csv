@@ -25,6 +25,6 @@ public enum Gender {
     }
 
     public boolean isGenderEquals(Gender gen) {
-        return gender.equals(gen);
+        return gen.toString().equals(gender);
     }
 }
