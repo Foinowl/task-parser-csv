@@ -1,14 +1,7 @@
 package org.example.titanic;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import static org.example.titanic.Utils.getClassPathResourceInputStream;
 import com.opencsv.exceptions.CsvValidationException;
-import org.example.titanic.model.RequestBean;
-import org.example.titanic.model.Titanic;
-import org.example.titanic.parser.CsvReader;
 
 public class Runner {
 

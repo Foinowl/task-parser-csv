@@ -1,4 +1,4 @@
-package org.example.titanic;
+package org.example.titanic.utils;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

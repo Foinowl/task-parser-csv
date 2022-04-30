@@ -1,12 +1,17 @@
 package org.example.titanic.model;
 
 
+import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.titanic.mapper.ConverterToGender;
+import org.example.titanic.mapper.ConverterToSurvived;
+import org.example.titanic.mapper.DoubleConverter;
 
 @ToString
 @Getter
@@ -18,48 +23,15 @@ public class Titanic implements RequestBean{
     @CsvBindByName(column = "PassengerId")
     private long passengerId;
 
-    @CsvBindByName(column = "Survived")
-    private int survied;
-
-    @CsvBindByName(column = "Pclass")
-    private int passengerClass;
+    @CsvCustomBindByName(column = "Survived", converter = ConverterToSurvived.class)
+    private Survived survived;
 
     @CsvBindByName(column = "Name")
     private String name;
 
-    @CsvBindByName(column = "Sex")
-    private String sex;
+    @CsvCustomBindByName(column = "Sex", converter = ConverterToGender.class)
+    private Gender gender;
 
-    @CsvBindByName(column = "Age")
-    private String age;
-
-    @CsvBindByName(column = "SibSp")
-    private int sibShip;
-
-    @CsvBindByName(column = "Parch")
-    private int parch;
-
-    @CsvBindByName(column = "Ticket")
-    private String ticket;
-
-    @CsvBindByName(column = "Fare")
-    private double fare;
-
-    @CsvBindByName(column = "Cabin")
-    private String cabin;
-
-    @CsvBindByName(column = "Embarked")
-    private char embarked;
-
-    public boolean hasWoman() {
-        return this.sex.equals("female");
-    }
-
-    public boolean hasMan() {
-        return this.sex.equals("male");
-    }
-
-    public boolean hasSurvied() {
-        return survied == 1;
-    }
+    @CsvCustomBindByName(column = "Age", converter = DoubleConverter.class)
+    private Double age;
 }

@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import org.example.titanic.utils.Constants;
 
 public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 

@@ -1,4 +1,4 @@
-package org.example.titanic.parser;
+package org.example.titanic.utils;
 
 public class Constants {
 
