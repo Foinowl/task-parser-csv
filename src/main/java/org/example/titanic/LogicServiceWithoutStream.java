@@ -3,8 +3,10 @@ package org.example.titanic;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static org.example.titanic.utils.Utils.isMan;
+import static org.example.titanic.utils.Utils.isSurvived;
+import static org.example.titanic.utils.Utils.isWoman;
 import static org.example.titanic.utils.Utils.roundNumber;
-import org.example.titanic.model.Gender;
 import org.example.titanic.model.RequestBean;
 import org.example.titanic.model.Titanic;
 
@@ -20,7 +22,7 @@ public class LogicServiceWithoutStream implements CalculateService {
         int totalCount = 0;
 
         for (Titanic obj : newList) {
-            if (obj.getGender().isGenderEquals(Gender.FEMALE) && obj.getSurvived().isSurvived()) {
+            if (isWoman(obj) && isSurvived(obj)) {
                 averageAge += obj.getAge();
                 totalCount += 1;
             }
@@ -39,7 +41,7 @@ public class LogicServiceWithoutStream implements CalculateService {
         int totalCount = 0;
 
         for (Titanic obj : newList) {
-            if (obj.getGender().isGenderEquals(Gender.MALE) && !obj.getSurvived().isSurvived()) {
+            if (isMan(obj) && isSurvived(obj)) {
                 averageAge += obj.getAge();
                 totalCount += 1;
             }

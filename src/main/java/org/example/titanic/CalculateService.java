@@ -3,7 +3,6 @@ package org.example.titanic;
 import java.util.List;
 import java.util.Map;
 import org.example.titanic.model.RequestBean;
-import org.example.titanic.model.Titanic;
 
 public interface CalculateService {
     //    1. Подсчитать средний возраст выживших женщин.

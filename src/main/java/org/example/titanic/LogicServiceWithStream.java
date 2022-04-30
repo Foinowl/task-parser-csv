@@ -10,9 +10,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import static org.example.titanic.utils.Utils.roundNumber;
-import org.example.titanic.model.Gender;
 import org.example.titanic.model.RequestBean;
 import org.example.titanic.model.Titanic;
+import org.example.titanic.utils.Utils;
 
 public class LogicServiceWithStream implements CalculateService {
     @Override
@@ -21,8 +21,8 @@ public class LogicServiceWithStream implements CalculateService {
         final List<Titanic> newList = (List<Titanic>) titanicList;
         double value = newList
             .stream()
-            .filter(t -> t.getGender().isGenderEquals(Gender.FEMALE))
-            .filter(t -> t.getSurvived().isSurvived())
+            .filter(Utils::isWoman)
+            .filter(Utils::isSurvived)
             .mapToDouble(Titanic::getAge)
             .average()
             .orElse(Double.NaN);
@@ -36,13 +36,14 @@ public class LogicServiceWithStream implements CalculateService {
         final List<Titanic> newList = (List<Titanic>) titanicList;
         double value = newList
             .stream()
-            .filter(t -> t.getGender().isGenderEquals(Gender.MALE))
-            .filter(t -> !t.getSurvived().isSurvived())
+            .filter(Utils::isMan)
+            .filter(Utils::isSurvived)
             .mapToDouble(Titanic::getAge)
             .average()
             .orElse(Double.NaN);
 
-        return roundNumber(value);    }
+        return roundNumber(value);
+    }
 
     @Override
     public Map<Integer, Integer> getMapByNamesLength(final List<? extends RequestBean> titanicList) {

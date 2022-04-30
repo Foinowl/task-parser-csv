@@ -2,11 +2,21 @@ package org.example.titanic.model;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.example.titanic.mapper.ConverterToGender;
 import org.example.titanic.mapper.ConverterToSurvived;
 import org.example.titanic.mapper.DoubleConverter;
 
-public class Passenger implements RequestBean{
+@ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Passenger implements RequestBean {
     @CsvBindByName(column = "PassengerId")
     private long passengerId;
 

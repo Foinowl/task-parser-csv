@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.example.titanic.model.Gender;
 import org.example.titanic.model.RequestBean;
 import org.example.titanic.model.Titanic;
 
@@ -40,4 +41,15 @@ public class Utils {
         return d;
     }
 
+    public static boolean isMan(RequestBean requestBean) {
+        return requestBean.getGender().isGenderEquals(Gender.MALE);
+    }
+
+    public static boolean isWoman(RequestBean requestBean) {
+        return requestBean.getGender().isGenderEquals(Gender.FEMALE);
+    }
+
+    public static boolean isSurvived(RequestBean requestBean) {
+        return requestBean.getSurvived().isSurvived();
+    }
 }
