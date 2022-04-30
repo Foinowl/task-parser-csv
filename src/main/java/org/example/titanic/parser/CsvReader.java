@@ -2,9 +2,13 @@ package org.example.titanic.parser;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +17,11 @@ import java.util.Map;
 
 public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
+    private final CsvDetails csvDetails;
+
     private InputStreamReader inputStream;
+
+    private File file;
 
     private BufferedReader bufferedReader;
 
@@ -21,7 +29,24 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
     private String separator;
 
-    private CsvDetails csvDetails = new CsvDetails();
+
+    private CsvReader(final Boolean heading, final String separator) {
+        this.heading = heading;
+        this.separator = separator;
+        this.csvDetails = new CsvDetails();
+    }
+
+    private CsvReader(final InputStream inputStream, final Boolean heading,
+                     final String separator) {
+        this(heading, separator);
+        initInputStream(inputStream);
+    }
+
+    private CsvReader(final File file, final Boolean heading,
+                     final String separator) {
+        this(heading, separator);
+        initFile(file);
+    }
 
 
     public void parse() throws IOException {
@@ -58,29 +83,34 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
     }
 
-    public void initInputStream(InputStream inputStream) {
+    private void initInputStream(InputStream inputStream) {
         setInputStream(new InputStreamReader(inputStream));
         setBufferedReader(new BufferedReader(this.inputStream));
     }
 
-    private CsvReader setInputStream(final InputStreamReader inputStream) {
+    private void initFile(File file) {
+        try {
+            setInputStream(new FileReader(file));
+            setBufferedReader(new BufferedReader(this.inputStream));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void setInputStream(final InputStreamReader inputStream) {
         this.inputStream = inputStream;
-        return this;
     }
 
-    private CsvReader setBufferedReader(final BufferedReader bufferedReader) {
+    private void setBufferedReader(final BufferedReader bufferedReader) {
         this.bufferedReader = bufferedReader;
-        return this;
     }
 
-    public CsvReader setHeading(final Boolean heading) {
+    public void setHeading(final Boolean heading) {
         this.heading = heading;
-        return this;
     }
 
-    public CsvReader setSeparator(final String separator) {
+    public void setSeparator(final String separator) {
         this.separator = separator;
-        return this;
     }
 
     @Override
@@ -100,7 +130,7 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
     }
 
     public static class CsvDetails {
-        private Map<String, Integer> headings;
+        private final Map<String, Integer> headings = new HashMap<>();
 
         private List<String[]> lines = new LinkedList<>();
 
@@ -157,6 +187,59 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
                 return csvDetails;
             }
             return null;
+        }
+    }
+
+    public static class Builder {
+
+        private InputStream inputStream;
+
+        private File file;
+
+        private Boolean heading;
+
+        private String separator = Constants.COMMA;
+
+        public Builder setInputStream(final InputStream inputStream) {
+            this.inputStream = inputStream;
+            return this;
+        }
+
+        public Builder setFile(final File file) {
+            this.file = file;
+            return this;
+        }
+
+        public Builder setHeading(final Boolean heading) {
+            this.heading = heading;
+            return this;
+        }
+
+        public Builder setSeparator(final String separator) {
+            this.separator = separator;
+            return this;
+        }
+
+        public CsvReader build() {
+            if (inputStream != null && file != null) {
+                throw new IllegalArgumentException(
+                    "Decide to use inputStream or file, both at the same time are not supported");
+            }
+
+            CsvReader csvReader = null;
+
+            if (file != null) {
+                if (!file.exists()) {
+                    throw new IllegalArgumentException("file has no founded");
+                }
+                csvReader = new CsvReader(file, heading, separator);
+            }
+
+            if (inputStream != null) {
+                csvReader = new CsvReader(inputStream, heading, separator);
+            }
+
+            return csvReader;
         }
     }
 }

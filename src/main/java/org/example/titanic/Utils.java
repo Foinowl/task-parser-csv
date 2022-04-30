@@ -12,7 +12,7 @@ public class Utils {
     private static List<Titanic> listPassengers;
     public static List<Titanic> getListTitanic() {
 
-        listPassengers = new CsvToBeanBuilder(new InputStreamReader(getClassPathResourceInputStream("Евгений Едвабинский - train.csv")))
+        listPassengers = new CsvToBeanBuilder(new InputStreamReader(getClassPathResourceInputStream("train.csv")))
             .withType(Titanic.class)
             .build()
             .parse();
@@ -23,7 +23,7 @@ public class Utils {
         return new BigDecimal(d).setScale(2, RoundingMode.DOWN).doubleValue();
     }
 
-    private static InputStream getClassPathResourceInputStream(String fileName) {
+    static InputStream getClassPathResourceInputStream(String fileName) {
         return Utils.class.getClassLoader().getResourceAsStream(fileName);
     }
 
