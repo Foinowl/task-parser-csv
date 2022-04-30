@@ -1,25 +1,13 @@
-package org.example.titanic;
-
+package org.example.titanic.model;
 
 import com.opencsv.bean.CsvBindByName;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@ToString
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Titanic {
-
+public class Passenger implements RequestBean{
     @CsvBindByName(column = "PassengerId")
     private long passengerId;
 
     @CsvBindByName(column = "Survived")
-    private int survied;
+    private Survived survied;
 
     @CsvBindByName(column = "Pclass")
     private int passengerClass;
@@ -28,7 +16,7 @@ public class Titanic {
     private String name;
 
     @CsvBindByName(column = "Sex")
-    private String sex;
+    private Gender gender;
 
     @CsvBindByName(column = "Age")
     private String age;
@@ -51,15 +39,4 @@ public class Titanic {
     @CsvBindByName(column = "Embarked")
     private char embarked;
 
-    public boolean hasWoman() {
-        return this.sex.equals("female");
-    }
-
-    public boolean hasMan() {
-        return this.sex.equals("male");
-    }
-
-    public boolean hasSurvied() {
-        return survied == 1;
-    }
 }
