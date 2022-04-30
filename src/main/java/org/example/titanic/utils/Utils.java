@@ -21,7 +21,7 @@ public class Utils {
         return listPassengers;
     }
 
-    static double roundNumber(double d) {
+    public static double roundNumber(double d) {
         return new BigDecimal(d).setScale(2, RoundingMode.DOWN).doubleValue();
     }
 
