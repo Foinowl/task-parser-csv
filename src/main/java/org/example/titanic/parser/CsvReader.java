@@ -8,12 +8,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.example.titanic.utils.Constants;
 
 public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
@@ -30,25 +33,31 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
     private String separator;
 
+    private String regex;
+
 
     private CsvReader(final Boolean heading, final String separator) {
         this.heading = heading;
         this.separator = separator;
         this.csvDetails = new CsvDetails();
+        this.setRegex();
     }
 
     private CsvReader(final InputStream inputStream, final Boolean heading,
-                     final String separator) {
+                      final String separator) {
         this(heading, separator);
         initInputStream(inputStream);
     }
 
     private CsvReader(final File file, final Boolean heading,
-                     final String separator) {
+                      final String separator) {
         this(heading, separator);
         initFile(file);
     }
 
+    private void setRegex() {
+        this.regex ="(?:"+this.separator+"|\\n|^)(\"(?:(?:\"\")*[^\"]*)*\"|[^\""+this.separator+"\\n]*|(?:\\n|$))";
+    }
 
     public void parse() throws IOException {
         readHeader();
@@ -69,11 +78,17 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
     }
 
     private String[] readLineAndSplit() throws IOException {
-        return getWordsBySeparator(bufferedReader.readLine());
+        return getWordsByRegex(bufferedReader.readLine());
     }
 
-    private String[] getWordsBySeparator(String line) {
-        return line.trim().split(this.separator);
+    private String[] getWordsByRegex(String line) {
+        Matcher matcher = Pattern.compile(this.regex).matcher(line);
+        int i = 0;
+        List<String> arr = new ArrayList<>();
+        while (matcher.find()) {
+            arr.add(matcher.group(1));
+        }
+        return arr.toArray(new String[0]);
     }
 
     private void mapByHead() {

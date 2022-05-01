@@ -16,14 +16,13 @@ import org.example.titanic.utils.Utils;
 
 public class LogicServiceWithStream implements CalculateService {
     @Override
-    public double getAverageAgeFromWomen(final List<? extends RequestBean> titanicList) {
+    public double getAverageAgeFromWomen(final List<? extends RequestBean> lists) {
 
-        final List<Titanic> newList = (List<Titanic>) titanicList;
-        double value = newList
+        double value = lists
             .stream()
             .filter(Utils::isWoman)
             .filter(Utils::isSurvived)
-            .mapToDouble(Titanic::getAge)
+            .mapToDouble(RequestBean::getAge)
             .average()
             .orElse(Double.NaN);
 
@@ -31,14 +30,13 @@ public class LogicServiceWithStream implements CalculateService {
     }
 
     @Override
-    public double getAverageAgeFromDrownedMen(final List<? extends RequestBean> titanicList) {
+    public double getAverageAgeFromDrownedMen(final List<? extends RequestBean> lists) {
 
-        final List<Titanic> newList = (List<Titanic>) titanicList;
-        double value = newList
+        double value = lists
             .stream()
             .filter(Utils::isMan)
             .filter(Utils::isSurvived)
-            .mapToDouble(Titanic::getAge)
+            .mapToDouble(RequestBean::getAge)
             .average()
             .orElse(Double.NaN);
 
@@ -46,13 +44,12 @@ public class LogicServiceWithStream implements CalculateService {
     }
 
     @Override
-    public Map<Integer, Integer> getMapByNamesLength(final List<? extends RequestBean> titanicList) {
+    public Map<Integer, Integer> getMapByNamesLength(final List<? extends RequestBean> lists) {
 
-        final List<Titanic> newList = (List<Titanic>) titanicList;
         Map<Integer, Integer> objs =
-            newList.stream().collect(Collectors.toMap(obj -> obj.getName().length(), obj1 -> 1, Integer::sum));
+            lists.stream().collect(Collectors.toMap(obj -> obj.getName().length(), obj1 -> 1, Integer::sum));
 
-        HashMap<Integer, ArrayList<String>> objs1 = getMap(newList.stream()
+        HashMap<Integer, ArrayList<String>> objs1 = getMap(lists.stream()
                 .map(object -> Objects.toString(object.getName(), null))
                 .collect(Collectors.toList()),
             String::length, HashMap::new, ArrayList::new);

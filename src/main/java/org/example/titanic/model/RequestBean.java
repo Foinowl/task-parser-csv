@@ -6,4 +6,6 @@ public interface RequestBean {
     Gender getGender();
 
     Double getAge();
+
+    String getName();
 }

@@ -8,20 +8,18 @@ import static org.example.titanic.utils.Utils.isSurvived;
 import static org.example.titanic.utils.Utils.isWoman;
 import static org.example.titanic.utils.Utils.roundNumber;
 import org.example.titanic.model.RequestBean;
-import org.example.titanic.model.Titanic;
 
 public class LogicServiceWithoutStream implements CalculateService {
     @Override
-    public double getAverageAgeFromWomen(final List<? extends RequestBean> titanicList) {
-        if (titanicList == null || titanicList.isEmpty()) {
+    public double getAverageAgeFromWomen(final List<? extends RequestBean> lists) {
+        if (lists == null || lists.isEmpty()) {
             return 0.0;
         }
 
-        final List<Titanic> newList = (List<Titanic>) titanicList;
         double averageAge = 0;
         int totalCount = 0;
 
-        for (Titanic obj : newList) {
+        for (RequestBean obj : lists) {
             if (isWoman(obj) && isSurvived(obj)) {
                 averageAge += obj.getAge();
                 totalCount += 1;
@@ -31,16 +29,15 @@ public class LogicServiceWithoutStream implements CalculateService {
     }
 
     @Override
-    public double getAverageAgeFromDrownedMen(final List<? extends RequestBean> titanicList) {
-        if (titanicList == null || titanicList.isEmpty()) {
+    public double getAverageAgeFromDrownedMen(final List<? extends RequestBean> lists) {
+        if (lists == null || lists.isEmpty()) {
             return 0.0;
         }
-        final List<Titanic> newList = (List<Titanic>) titanicList;
 
         double averageAge = 0;
         int totalCount = 0;
 
-        for (Titanic obj : newList) {
+        for (RequestBean obj : lists) {
             if (isMan(obj) && isSurvived(obj)) {
                 averageAge += obj.getAge();
                 totalCount += 1;
@@ -50,14 +47,13 @@ public class LogicServiceWithoutStream implements CalculateService {
     }
 
     @Override
-    public Map<Integer, Integer> getMapByNamesLength(final List<? extends RequestBean> titanicList) {
-        if (titanicList == null || titanicList.isEmpty()) {
+    public Map<Integer, Integer> getMapByNamesLength(final List<? extends RequestBean> lists) {
+        if (lists == null || lists.isEmpty()) {
             return null;
         }
         Map<Integer, Integer> map = new HashMap<>();
 
-        final List<Titanic> newList = (List<Titanic>) titanicList;
-        for (Titanic titanic : newList) {
+        for (RequestBean titanic : lists) {
             map.putIfAbsent(titanic.getName().length(), 0);
             map.computeIfPresent(titanic.getName().length(), (key, val) -> val + 1);
         }
