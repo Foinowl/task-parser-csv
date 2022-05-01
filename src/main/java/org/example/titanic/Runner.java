@@ -1,8 +1,6 @@
 package org.example.titanic;
 
-import java.io.IOException;
 import java.util.List;
-import com.opencsv.exceptions.CsvValidationException;
 import org.example.titanic.model.Passenger;
 import org.example.titanic.service.PassengerService;
 import org.example.titanic.service.impl.PassengerServiceWithStream;
@@ -19,9 +17,6 @@ public class Runner {
 
         List<Passenger> lists = Utils.getListWithOpenCSV();
         List<Passenger> lists1 = Utils.getListByOwnParser();
-
-
-
 
         System.out.println("1. Подсчитать средний возраст выживших женщин:");
         System.out.println(calculateServiceWithStream.getAverageAgeFromWomen(lists));
@@ -44,8 +39,6 @@ public class Runner {
         System.out.println(
             "3. Получить HashMap, где ключ - количество символов в имени, а значение - количество таких имен:");
         System.out.println(calculateServiceWithoutStream.getMapByNamesLength(lists1));
-
-
     }
 
 }
