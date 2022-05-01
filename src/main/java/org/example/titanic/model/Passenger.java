@@ -16,7 +16,7 @@ import org.example.titanic.mapper.DoubleConverter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Passenger implements RequestBean {
+public class Passenger {
     @CsvBindByName(column = "PassengerId")
     private long passengerId;
 
@@ -31,10 +31,4 @@ public class Passenger implements RequestBean {
 
     @CsvCustomBindByName(column = "Age", converter = DoubleConverter.class)
     private Double age;
-
-
-    @Override
-    public void setPassengerId(final Long longs) {
-        this.passengerId = longs;
-    }
 }

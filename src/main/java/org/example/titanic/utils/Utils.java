@@ -8,34 +8,29 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Supplier;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.example.titanic.mapper.ConverterPojo;
-import org.example.titanic.mapper.GeneralConverter;
 import org.example.titanic.mapper.PassengerConverter;
 import org.example.titanic.model.Gender;
 import org.example.titanic.model.Passenger;
-import org.example.titanic.model.RequestBean;
-import org.example.titanic.model.Titanic;
 import org.example.titanic.parser.CsvReader;
 
 public class Utils {
 
-    private static List<Titanic> listPassengers;
-    public static List<? extends RequestBean> getListTitanic() {
+    public static List<Passenger> getListWithOpenCSV() {
 
-        listPassengers = new CsvToBeanBuilder(new InputStreamReader(getClassPathResourceInputStream("train.csv")))
-            .withType(Titanic.class)
+        return new CsvToBeanBuilder(new InputStreamReader(getClassPathResourceInputStream("train.csv")))
+            .withType(Passenger.class)
             .build()
             .parse();
-        return listPassengers;
     }
 
-    public static <T> List<? extends RequestBean> getListByType(Supplier<T> type) {
+    public static List<Passenger> getListByOwnParser() {
 
         CsvReader csvReader = new CsvReader.Builder()
             .setInputStream(getClassPathResourceInputStream("train.csv"))
             .setHeading(true)
+            .setSeparator(Constants.COMMA)
             .build();
 
 
@@ -45,18 +40,18 @@ public class Utils {
             throw new RuntimeException(e);
         }
 
-        List<? extends RequestBean> obj = new ArrayList<>();
+        List<Passenger> obj = new ArrayList<>();
 
         Iterator<CsvReader.CsvDetails> iter = csvReader.iterator();
-        ConverterPojo<T> passengerConverter = new GeneralConverter<>(type);
+        ConverterPojo<Passenger> passengerConverter = new PassengerConverter();
         while (iter.hasNext()) {
-            obj.add(passengerConverter.convertToRead(iter.next()));
+            obj.add(passengerConverter.convertToObject(iter.next()));
         }
         return obj;
     }
 
 
-    public static double roundNumber(double d) {
+    public static double roundNumber(Double d) {
         return new BigDecimal(d).setScale(2, RoundingMode.DOWN).doubleValue();
     }
 
@@ -68,22 +63,22 @@ public class Utils {
         return value == null || value.isEmpty() ? Double.NaN : Double.parseDouble(value);
     }
 
-    public static double returnPrimitiveFromDouble(Double d) {
-        if (d.isNaN() ){
-            return 0;
+    public static Double returnDoubleWithoutNaN(Double d) {
+        if (d.isNaN()) {
+            return 0.0;
         }
         return d;
     }
 
-    public static boolean isMan(RequestBean requestBean) {
-        return requestBean.getGender().isGenderEquals(Gender.MALE);
+    public static boolean isMan(Passenger passenger) {
+        return passenger.getGender().isGenderEquals(Gender.MALE);
     }
 
-    public static boolean isWoman(RequestBean requestBean) {
-        return requestBean.getGender().isGenderEquals(Gender.FEMALE);
+    public static boolean isWoman(Passenger passenger) {
+        return passenger.getGender().isGenderEquals(Gender.FEMALE);
     }
 
-    public static boolean isSurvived(RequestBean requestBean) {
-        return requestBean.getSurvived().isSurvived();
+    public static boolean isSurvived(Passenger passenger) {
+        return passenger.getSurvived().isSurvived();
     }
 }

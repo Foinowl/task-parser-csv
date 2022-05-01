@@ -3,7 +3,6 @@ package org.example.titanic.mapper;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import org.example.titanic.model.Passenger;
-import org.example.titanic.model.RequestBean;
 import org.example.titanic.parser.CsvReader;
 
 public class PassengerConverter implements ConverterPojo<Passenger> {
@@ -14,12 +13,12 @@ public class PassengerConverter implements ConverterPojo<Passenger> {
     private final ConverterToGender converterToGender = new ConverterToGender();
 
     @Override
-    public <T extends RequestBean> T convertToRead(final String[] string) {
+    public Passenger convertToObject(final String[] string) {
         return null;
     }
 
     @Override
-    public <T extends RequestBean> T convertToRead(final CsvReader.CsvDetails details) {
+    public Passenger convertToObject(final CsvReader.CsvDetails details) {
         Passenger passenger = new Passenger();
 
         try {
@@ -28,11 +27,9 @@ public class PassengerConverter implements ConverterPojo<Passenger> {
             passenger.setName(details.getByColumn("Name"));
             passenger.setGender(converterToGender.convert(details.getByColumn("Sex")));
             passenger.setAge(doubleConverter.convert(details.getByColumn("Age")));
-        } catch (CsvConstraintViolationException e) {
-            throw new RuntimeException(e);
-        } catch (CsvDataTypeMismatchException e) {
+        } catch (CsvConstraintViolationException | CsvDataTypeMismatchException e) {
             throw new RuntimeException(e);
         }
-        return (T) passenger;
+        return passenger;
     }
 }

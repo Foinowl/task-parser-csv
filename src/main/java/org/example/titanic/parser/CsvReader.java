@@ -37,10 +37,10 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
 
     private CsvReader(final Boolean heading, final String separator) {
-        this.heading = heading;
-        this.separator = separator;
+        setHeading(heading);
+        setSeparator(separator);
+        setRegex();
         this.csvDetails = new CsvDetails();
-        this.setRegex();
     }
 
     private CsvReader(final InputStream inputStream, final Boolean heading,
@@ -148,7 +148,7 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
     public static class CsvDetails {
         private final Map<String, Integer> headings = new HashMap<>();
 
-        private List<String[]> lines = new LinkedList<>();
+        private final List<String[]> lines = new LinkedList<>();
 
         private String[] currentLine;
 
@@ -175,15 +175,15 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
         }
 
         public String getByColumn(String column) {
-            return currentLine[headings.get(column)];
+            return getByIndex(headings.get(column));
         }
     }
 
     private static class CsvIterator implements Iterator<CsvDetails> {
 
-        private ListIterator<String[]> listIterator;
+        private final ListIterator<String[]> listIterator;
 
-        private CsvDetails csvDetails;
+        private final CsvDetails csvDetails;
 
         public CsvIterator(final CsvReader reader) {
             this.csvDetails = reader.csvDetails;
@@ -214,7 +214,7 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
         private Boolean heading;
 
-        private String separator = Constants.COMMA;
+        private String separator;
 
         public Builder setInputStream(final InputStream inputStream) {
             this.inputStream = inputStream;

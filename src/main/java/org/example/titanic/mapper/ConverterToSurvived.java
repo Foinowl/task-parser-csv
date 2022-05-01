@@ -1,7 +1,6 @@
 package org.example.titanic.mapper;
 
 import com.opencsv.bean.AbstractBeanField;
-import com.opencsv.bean.AbstractCsvConverter;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import org.example.titanic.model.Survived;
