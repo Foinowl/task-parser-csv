@@ -18,5 +18,5 @@ public abstract class AbstractBaseService<T1> implements BaseService<T1> {
         return Stream.of(predicates).reduce(x -> true, Predicate::or);
     }
 
-    public abstract double handleAverageValue(List<T1> lists, Function<T1, Double> function, Predicate<T1> predicates);
+    protected abstract double handleAverageValue(List<T1> lists, Function<T1, Double> function, Predicate<T1> predicates);
 }

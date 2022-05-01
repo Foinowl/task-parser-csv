@@ -44,7 +44,7 @@ public class PassengerServiceWithoutStream extends AbstractBaseService<Passenger
 
 
     @Override
-    public double handleAverageValue(final List<Passenger> lists, final Function<Passenger, Double> function,
+    protected double handleAverageValue(final List<Passenger> lists, final Function<Passenger, Double> function,
                                      final Predicate<Passenger> predicates) {
         if (lists == null || lists.isEmpty()) {
             return 0.0;

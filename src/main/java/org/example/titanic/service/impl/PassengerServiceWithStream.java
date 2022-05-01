@@ -64,7 +64,7 @@ public class PassengerServiceWithStream extends AbstractBaseService<Passenger>
     }
 
     @Override
-    public double handleAverageValue(final List<Passenger> lists, final Function<Passenger, Double> function,
+    protected double handleAverageValue(final List<Passenger> lists, final Function<Passenger, Double> function,
                                      final Predicate<Passenger> predicates
     ) {
         Double value = lists
