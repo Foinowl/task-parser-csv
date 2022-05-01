@@ -33,4 +33,8 @@ public class Passenger implements RequestBean {
     private Double age;
 
 
+    @Override
+    public void setPassengerId(final Long longs) {
+        this.passengerId = longs;
+    }
 }

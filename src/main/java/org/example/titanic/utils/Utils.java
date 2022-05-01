@@ -8,8 +8,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.example.titanic.mapper.ConverterPojo;
+import org.example.titanic.mapper.GeneralConverter;
 import org.example.titanic.mapper.PassengerConverter;
 import org.example.titanic.model.Gender;
 import org.example.titanic.model.Passenger;
@@ -29,7 +31,7 @@ public class Utils {
         return listPassengers;
     }
 
-    public static List<? extends RequestBean> getListPassenger() {
+    public static <T> List<? extends RequestBean> getListByType(Supplier<T> type) {
 
         CsvReader csvReader = new CsvReader.Builder()
             .setInputStream(getClassPathResourceInputStream("train.csv"))
@@ -46,11 +48,11 @@ public class Utils {
         List<? extends RequestBean> obj = new ArrayList<>();
 
         Iterator<CsvReader.CsvDetails> iter = csvReader.iterator();
-        ConverterPojo<Passenger> passengerConverter = new PassengerConverter();
+        ConverterPojo<T> passengerConverter = new GeneralConverter<>(type);
         while (iter.hasNext()) {
             obj.add(passengerConverter.convertToRead(iter.next()));
         }
-        return listPassengers;
+        return obj;
     }
 
 

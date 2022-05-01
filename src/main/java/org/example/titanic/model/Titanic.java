@@ -34,4 +34,9 @@ public class Titanic implements RequestBean{
 
     @CsvCustomBindByName(column = "Age", converter = DoubleConverter.class)
     private Double age;
+
+    @Override
+    public void setPassengerId(final Long longs) {
+        this.passengerId = longs;
+    }
 }

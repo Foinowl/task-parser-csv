@@ -86,7 +86,7 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
         int i = 0;
         List<String> arr = new ArrayList<>();
         while (matcher.find()) {
-            arr.add(matcher.group(1));
+            arr.add(matcher.group(1).replaceAll("^\"|\"$", ""));
         }
         return arr.toArray(new String[0]);
     }

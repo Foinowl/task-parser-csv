@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import static org.example.titanic.utils.Utils.roundNumber;
 import org.example.titanic.model.RequestBean;
-import org.example.titanic.model.Titanic;
 import org.example.titanic.utils.Utils;
 
 public class LogicServiceWithStream implements CalculateService {
