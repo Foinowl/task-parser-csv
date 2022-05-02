@@ -17,6 +17,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.example.titanic.exception.CSVException;
+import org.example.titanic.exception.DefinitionsArgumentException;
+import org.example.titanic.exception.HeaderMissingException;
 import org.example.titanic.utils.Constants;
 
 public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
@@ -24,8 +27,6 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
     private final CsvDetails csvDetails;
 
     private InputStreamReader inputStream;
-
-    private File file;
 
     private BufferedReader bufferedReader;
 
@@ -56,19 +57,24 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
     }
 
     private void setRegex() {
-        this.regex ="(?:"+this.separator+"|\\n|^)(\"(?:(?:\"\")*[^\"]*)*\"|[^\""+this.separator+"\\n]*|(?:\\n|$))";
+        this.regex =
+            "(?:" + this.separator + "|\\n|^)(\"(?:(?:\"\")*[^\"]*)*\"|[^\"" + this.separator + "\\n]*|(?:\\n|$))";
     }
 
-    public void parse() throws IOException {
+    public void parse() {
         readHeader();
 
-        while (bufferedReader.ready()) {
-            String[] line = readLineAndSplit();
-            csvDetails.addLine(line);
+        try {
+            while (bufferedReader.ready()) {
+                String[] line = readLineAndSplit();
+                csvDetails.addLine(line);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void readHeader() throws IOException {
+    private void readHeader() {
         if (!heading) {
             return;
         }
@@ -77,8 +83,13 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
         csvDetails.setLineToHead(lineOfHead);
     }
 
-    private String[] readLineAndSplit() throws IOException {
-        return getWordsByRegex(bufferedReader.readLine());
+    private String[] readLineAndSplit() {
+        try {
+            return getWordsByRegex(bufferedReader.readLine());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String[] getWordsByRegex(String line) {
@@ -145,7 +156,7 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
         return new CsvIterator(this);
     }
 
-    public static class CsvDetails {
+    public class CsvDetails {
         private final Map<String, Integer> headings = new HashMap<>();
 
         private final List<String[]> lines = new LinkedList<>();
@@ -175,7 +186,11 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
         }
 
         public String getByColumn(String column) {
-            return getByIndex(headings.get(column));
+            if (heading) {
+                return getByIndex(headings.get(column));
+            }
+
+            throw new HeaderMissingException("Can't take values by headings");
         }
     }
 
@@ -214,7 +229,7 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
         private Boolean heading;
 
-        private String separator;
+        private String separator = Constants.COMMA;
 
         public Builder setInputStream(final InputStream inputStream) {
             this.inputStream = inputStream;
@@ -238,15 +253,14 @@ public class CsvReader implements Closeable, Iterable<CsvReader.CsvDetails> {
 
         public CsvReader build() {
             if (inputStream != null && file != null) {
-                throw new IllegalArgumentException(
-                    "Decide to use inputStream or file, both at the same time are not supported");
+                throw new DefinitionsArgumentException("Decide to use inputStream or file");
             }
 
             CsvReader csvReader = null;
 
             if (file != null) {
                 if (!file.exists()) {
-                    throw new IllegalArgumentException("file has no founded");
+                    throw new CSVException("file has no founded");
                 }
                 csvReader = new CsvReader(file, heading, separator);
             }

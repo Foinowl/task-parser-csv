@@ -4,10 +4,11 @@ import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import org.example.titanic.model.Survived;
+import org.example.titanic.parser.ConverterHandler;
 
-public class ConverterToSurvived extends AbstractBeanField {
+public class ConverterToSurvived extends AbstractBeanField implements ConverterHandler {
     @Override
-    protected Survived convert(final String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+    public Survived convert(final String s) {
         return Survived.of(s);
     }
 }

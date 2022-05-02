@@ -1,6 +1,5 @@
 package org.example.titanic.utils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -13,13 +12,14 @@ import org.example.titanic.mapper.ConverterPojo;
 import org.example.titanic.mapper.PassengerConverter;
 import org.example.titanic.model.Gender;
 import org.example.titanic.model.Passenger;
+import org.example.titanic.parser.CsvBeanReader;
 import org.example.titanic.parser.CsvReader;
 
 public class Utils {
 
     public static List<Passenger> getListWithOpenCSV() {
 
-        return new CsvToBeanBuilder(new InputStreamReader(getClassPathResourceInputStream("train.csv")))
+        return new CsvToBeanBuilder<Passenger>(new InputStreamReader(getClassPathResourceInputStream("train.csv")))
             .withType(Passenger.class)
             .build()
             .parse();
@@ -34,11 +34,7 @@ public class Utils {
             .build();
 
 
-        try {
-            csvReader.parse();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        csvReader.parse();
 
         List<Passenger> obj = new ArrayList<>();
 
@@ -48,6 +44,16 @@ public class Utils {
             obj.add(passengerConverter.convertToObject(iter.next()));
         }
         return obj;
+    }
+
+    public static List<Passenger> getListByOwnParserWithBean() {
+        CsvBeanReader<Passenger> beanBuilder = new CsvBeanReader
+            .Builder<Passenger>()
+            .setClass(Passenger.class)
+            .setInputStream(getClassPathResourceInputStream("train.csv"))
+            .build();
+
+        return beanBuilder.map();
     }
 
 

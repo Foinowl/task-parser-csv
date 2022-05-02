@@ -4,11 +4,12 @@ import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import org.example.titanic.model.Gender;
+import org.example.titanic.parser.ConverterHandler;
 
-public class ConverterToGender extends AbstractBeanField {
+public class ConverterToGender extends AbstractBeanField implements ConverterHandler {
 
     @Override
-    protected Gender convert(final String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+    public Gender convert(final String s) {
         return Gender.of(s);
     }
 }

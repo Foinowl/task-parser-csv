@@ -5,11 +5,12 @@ import static org.example.titanic.utils.Utils.returnDoubleWithoutNaN;
 import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import org.example.titanic.parser.ConverterHandler;
 
-public class DoubleConverter extends AbstractBeanField {
+public class DoubleConverter extends AbstractBeanField implements ConverterHandler {
 
     @Override
-    protected Double convert(final String s) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+    public Double convert(final String s) {
         return returnDoubleWithoutNaN(parseStringToDouble(s));
     }
 }
